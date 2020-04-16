@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 Status Share
+  table
+    tr
+      th Name
+      th Status Share
+      th Edit
+    each all, i in mangas
+      tr
+        td= all.name
+        td= all.statusshare
+          td
+            form(action='/mangas/statusshare/'+all.id method='POST')
+              div
+                label(for = "statusshare") reshare:
+                input(type='radio' name = "statusshare" value = "reshare")
+              br
+              div
+                label(for = "statusshare") nonreshare:
+                input(type='radio' name = "statusshare" value = "nonreshare")
+              br
+              button(type = "submit") Submit

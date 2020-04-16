@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p Upload APK non-r18
+  form(action='/upload-non-r18' enctype='multipart/form-data' method='POST')
+    input(type='file' name='mdo-non-r18.apk')
+    input(type='submit' value='Upload a file')

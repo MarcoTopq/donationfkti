@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 Status Age Genre
+  table
+    tr
+      th Name
+      th Status Age
+      th Edit
+    each all, i in genre
+      tr
+        td= all.name
+        td= all.statusage
+          td
+            form(action='/genre/all/'+all.id method='POST')
+              div
+                label(for = "statusage") R18:
+                input(type='radio' name = "statusage" value = "r18")
+              br
+              div
+                label(for = "statusage") Non R18:
+                input(type='radio' name = "statusage" value = "non-r18")
+              br
+              button(type = "submit") Submit

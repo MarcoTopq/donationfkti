@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 CHAPTERS UPDATE
+  table
+    tr
+      th Name
+      th Chapter
+    each chapter, i in chapters
+      tr
+        td= chapter.name
+        td= chapter.chapters.chapter

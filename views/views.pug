@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1 MOST VIEWS
+  table
+    tr
+      th Name
+      th view
+      th Image
+    each view, i in views
+      tr
+        td= view.name
+        td= view.views
+        each pic, i in view.pictures
+          td
+            img(src='https://admin.mangadropout.net/upload/manga/'+pic.picture alt=view.name width='100' height='100')

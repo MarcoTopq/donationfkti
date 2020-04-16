@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1 MOST FAVORITES
+  table
+    tr
+      th Name
+      th favorites
+      th Image
+    each fav, i in favs
+      tr
+        td= fav.name
+        td= fav.favorite
+        each pic, i in fav.pictures
+          td
+            img(src='https://admin.mangadropout.net/upload/manga/'+pic.picture alt=fav.name width='100' height='100')

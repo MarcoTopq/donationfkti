@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 CHAPTERS MOST VIEWS
+  table
+    tr
+      th Name
+      th Chapter
+      th views
+    each chapter, i in chapters
+      tr
+        each mangas, i in chapter.mangas
+          td= mangas.name
+          td= chapter.chapter
+          td= chapter.views

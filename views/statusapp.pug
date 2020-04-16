@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 Status App
+  table
+    tr
+      th Name
+      th Status App
+      th Edit
+    each all, i in mangas
+      tr
+        td= all.name
+        td= all.statusapp
+          td
+            form(action='/mangas/statusapp/'+all.id method='POST')
+              div
+                label(for = "statusapp") Semua:
+                input(type='radio' name = "statusapp" value = "semua")
+              br
+              div
+                label(for = "statusapp") Android:
+                input(type='radio' name = "statusapp" value = "android")
+              br
+              button(type = "submit") Submit
