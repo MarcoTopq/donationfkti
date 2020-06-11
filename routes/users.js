@@ -26,26 +26,26 @@ var updateSchema = {
   }
 };
 
-router.post('/signup', expressJoi(bodySchema), async (req, res) => {
+router.post('/signup', async (req, res) => {
   var body = req.body;
   await User.findOne({
-    where: {
-      email: body.email
-    }
-  }).then(current_user => {
-    if (current_user) {
-      return res.json("email has been used");
-    } else {
-      User.create({
-        username: body.username,
-        email: body.email,
-        phone: body.phone,
-        password: bcrypt.hashSync(body.password, 10),
-        role : 'member'
-      })
-      .then(data => (res.json(data)))
-    }
-  })
+      where: {
+        email: body.email
+      }
+    }).then(current_user => {
+      if (current_user) {
+        return res.json("email has been used");
+      } else {
+        User.create({
+            username: body.username,
+            email: body.email,
+            phone: body.phone,
+            password: bcrypt.hashSync(body.password, 10),
+            role: body.role
+          })
+          .then(data => (res.json(data)))
+      }
+    })
     .catch(err => res.status(400).json(err));
 });
 
@@ -57,15 +57,21 @@ router.post('/signin', async (req, res) => {
   }).then((user) => {
     const checkLogin = bcrypt.compareSync(req.body.password, user.password);
     if (checkLogin) {
-      var token = jwt.sign({ id: user.id, role: user.role }, config.secret ,{expiresIn: '1h'});
+      var token = jwt.sign({
+        id: user.id,
+        role: user.role
+      }, config.secret, {
+        expiresIn: '1h'
+      });
       if (token) {
         res.status(200).json({
           message: "Success Sign In",
-          token: token
+          token: token,
+          user: user,
         });
       }
     } else {
-      res.status(200).json({
+      res.status(300).json({
         message: "Failed Sign In",
       });
     }
@@ -76,73 +82,79 @@ router.post('/signin', async (req, res) => {
   });
 })
 
-router.get('/', auth.checkToken, auth.isAuthorized, async (req, res) => {
+router.post('/edit/:id', async (req, res) => {
+  var Id = req.params.id;
+  var body = req.body;
+  try {
+    var user = await User.findOne({
+      where: {
+        id: Id
+      }
+    })
+    if (!user) {
+      return res.status(300).json("User not found");
+    } else {
+      var update = await User.update({
+        username: body.username,
+        email: body.email,
+        phone: body.phone,
+        password: bcrypt.hashSync(body.password, 10),
+        role: body.role
+      }, {
+        where: {
+          id: Id
+        }
+      })
+    }
+    var finish = await User.findOne({
+      where: {
+        id: Id
+      }
+    })
+    res.json(finish)
+  } catch (error) {
+    res.status(400).json(err)
+  }
+})
+
+router.get('/', async (req, res) => {
   await User.findAll()
     .then(data => (res.json(data)))
     .catch(err => res.status(400).json(err))
 });
 
-router.get('/:id', auth.checkToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
   var Id = req.params.id;
   await User.findOne({
-    where: {
-      id: Id
-    }
-  })
+      where: {
+        id: Id
+      }
+    })
     .then(data => {
       if (!data) {
         return res.json("User not found");
-      }
-      else {
+      } else {
         return res.json(data);
       }
     })
     .catch(err => res.status(400).json(err))
 });
 
-router.put('/:id', auth.checkToken, expressJoi(updateSchema), async (req, res) => {
-  var Id = req.params.id;
-  var body = req.body;
-  await User.findOne({
-    where: {
-      id: Id
-    }
-  })
-    .then(data => {
-      if (!data) {
-        return res.json("User not found");
-      }
-      else {
-        User.update({
-          username: body.username,
-          email: body.email,
-          phone: body.phone,
-          password: body.password
-        }, {
-            where: {
-              id: Id
-            }
-          })
-      }
-    })
-    .then(data => (res.json(data)))
-    .catch(err => res.status(400).json(err))
-})
 
-router.delete('/:id', auth.checkToken, auth.isAuthorized,async (req, res) => {
+router.delete('/:id', async (req, res) => {
   var Id = req.params.id;
   await User.update({
     isDelete: true
   }, {
-      where: {
-        id: Id
-      }
-    })
-  await User.destroy({
     where: {
       id: Id
     }
   })
+  await User.destroy({
+      where: {
+        id: Id
+      }
+    })
     .then(res.json("User was remove"))
     .catch(err => res.status(400).json(err))
 });

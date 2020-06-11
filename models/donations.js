@@ -1,7 +1,7 @@
 'use strict'
 const Sequelize = require('sequelize');
 const db = require('../bin/index')
-const Donation = db.define('donation', {
+const Donations = db.define('donations', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -13,7 +13,7 @@ const Donation = db.define('donation', {
     email: {
         type: Sequelize.STRING,
     },
-    id_campaign: {
+    campaign_id: {
         type: Sequelize.INTEGER,
     },
     donation: {
@@ -27,6 +27,6 @@ const Donation = db.define('donation', {
     timestamps: false,
 });
 
-Donation.sync();
+Donations.sync();
 
-module.exports = Donation;
+module.exports = Donations;

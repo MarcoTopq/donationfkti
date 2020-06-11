@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dateFormat = require('dateformat');
-var Campaign = require('../models/campaigns');
+var Gallerys = require('../models/gallerys');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var config = require('../config/index');
@@ -62,21 +62,10 @@ router.post('/image', upload.single('photos'), async (req, res) => {
         var body = req.body;
         console.log(req.body);
         console.log(req.file)
-        try {   
-            // var campaign = await Campaign.create({
-            //     fundraiser: body.fundraiser,
-            //     email: body.email,
-            //     title: body.title,
-            //     category: body.category,
-            //     description: body.description,
-            //     image: file.filename,
-            //     current_donation: body.current_donation,
-            //     total_donation: body.total_donation,
-            //     time_limit: body.time_limit,
-            //     created_at: dateFormat(new Date(), "yyyy-mm-dd h:MM:ss"),
-            //     update_at: dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
-            // })
-            res.json({image : file.filename})
+        try {
+            res.json({
+                image: file.filename
+            })
         } catch (error) {
             res.json(error)
         }
@@ -86,26 +75,18 @@ router.post('/image', upload.single('photos'), async (req, res) => {
 router.post('/create', async (req, res) => {
     return new Promise(async (resolve, reject) => {
         console.log(req.file)
-        // var Id = req.params.id;
-        // var file = req.file
         var body = req.body;
         console.log(req.body);
         console.log(req.file)
-        try {   
-            var campaign = await Campaign.create({
-                fundraiser: body.fundraiser,
-                email: body.email,
+        try {
+            var gallerys = await Gallerys.create({
                 title: body.title,
-                category: body.category,
                 description: body.description,
                 image: body.image,
-                current_donation: body.current_donation,
-                total_donation: body.total_donation,
-                time_limit: body.time_limit,
                 created_at: dateFormat(new Date(), "yyyy-mm-dd h:MM:ss"),
                 updated_at: dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
             })
-            res.json(campaign)
+            res.json(gallerys)
         } catch (error) {
             res.json(error)
         }
@@ -114,21 +95,21 @@ router.post('/create', async (req, res) => {
 
 
 router.get('/', async (req, res) => {
-    await Campaign.findAll()
+    await Gallerys.findAll()
         .then(data => (res.json(data)))
         .catch(err => res.status(400).json(err))
 });
 
 router.get('/:id', async (req, res) => {
     var Id = req.params.id;
-    await Campaign.findOne({
+    await Gallerys.findOne({
             where: {
                 id: Id
             }
         })
         .then(data => {
             if (!data) {
-                return res.json("campaign not found");
+                return res.json("Gallerys not found");
             } else {
                 return res.json(data);
             }
@@ -139,25 +120,19 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', auth.checkToken, expressJoi(updateSchema), async (req, res) => {
     var Id = req.params.id;
     var body = req.body;
-    await Campaign.findOne({
+    await Gallerys.findOne({
             where: {
                 id: Id
             }
         })
         .then(data => {
             if (!data) {
-                return res.json("campaign not found");
+                return res.json("Gallerys not found");
             } else {
-                Campaign.update({
-                    fundraiser: body.fundraiser,
-                    email: body.email,
+                Gallerys.update({
                     title: body.title,
-                    category: body.category,
                     description: body.description,
                     image: body.image,
-                    current_donation: body.current_donation,
-                    total_donation: body.total_donation,
-                    time_limit: body.time_limit,
                     update_at: dateFormat(new Date(), "yyyy-mm-dd h:MM:ss")
                 }, {
                     where: {
@@ -172,19 +147,19 @@ router.put('/:id', auth.checkToken, expressJoi(updateSchema), async (req, res) =
 
 router.delete('/:id', auth.checkToken, auth.isAuthorized, async (req, res) => {
     var Id = req.params.id;
-    await Campaign.update({
+    await Gallerys.update({
         isDelete: true
     }, {
         where: {
             id: Id
         }
     })
-    await Campaign.destroy({
+    await Gallerys.destroy({
             where: {
                 id: Id
             }
         })
-        .then(res.json("campaign was remove"))
+        .then(res.json("Gallerys was remove"))
         .catch(err => res.status(400).json(err))
 });
 

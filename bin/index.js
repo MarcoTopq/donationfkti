@@ -2,10 +2,10 @@ var Sequelize = require('sequelize');
 const redis = require('redis');
 const client = redis.createClient();
 var db = new Sequelize({
-  database: 'sql12333784', 
-  username: 'sql12333784', 
-  password: 'mCL39mQGpV',
-  host: 'sql12.freemysqlhosting.net',
+  database: 'kDECKsmyE3', 
+  username: 'kDECKsmyE3', 
+  password: 'qe3Cr11fEf',
+  host: 'remotemysql.com',
   port: 3306,
   dialect: 'mysql',
   operatorsAliases: false,
@@ -32,3 +32,16 @@ db
   })
 module.exports = db
 // , connection;
+
+
+// You have successfully created a new database. The details are below.
+
+// Username: kDECKsmyE3
+
+// Database name: kDECKsmyE3
+
+// Password: qe3Cr11fEf
+
+// Server: remotemysql.com
+
+// Port: 3306
